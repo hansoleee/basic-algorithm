@@ -24,7 +24,7 @@ public class Queue {
 
     public static void queueEnqueue(int value) {
         if (queueIsFull()) {
-            System.out.println("Queue is Full!");
+            System.out.println("Queue overflow");
             return;
         }
         queue[rear] = value;
