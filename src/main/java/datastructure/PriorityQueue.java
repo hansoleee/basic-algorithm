@@ -5,9 +5,8 @@ import java.util.StringTokenizer;
 
 public class PriorityQueue {
     public static final int MAX_N = 100;
-
-    public static int[] heap = new int[MAX_N];
     public static int heapSize = 0;
+    public static int[] heap = new int[MAX_N];
 
     public static void heapInit() {
         heapSize = 0;
@@ -15,20 +14,23 @@ public class PriorityQueue {
 
     public static void heapPush(int value) {
         if (heapSize >= MAX_N) {
-            System.out.println("Heap overflow");
             return;
         }
 
         heap[heapSize] = value;
+        int index = heapSize;
 
-        int current = heapSize;
-        while (current > 0 && heap[current] < heap[(current - 1) / 2]) {
-            int temp = heap[(current - 1) / 2];
-            heap[(current - 1) / 2] = heap[current];
-            heap[current] = temp;
-            current = (current - 1) / 2;
+        while (index > 0) {
+            if (heap[index] < heap[(index - 1) / 2]) {
+                int temp = heap[index];
+                heap[index] = heap[(index - 1) / 2];
+                heap[(index - 1) / 2] = temp;
+            } else {
+                break;
+            }
+            index = (index - 1) / 2;
         }
-        heapSize += 1;
+        heapSize++;
     }
 
     public static int heapPop() {
@@ -36,31 +38,30 @@ public class PriorityQueue {
             return -1;
         }
 
-        //1순위 반환
         int result = heap[0];
-        int i = 0;
-
-        heapSize -= 1;
+        heapSize--;
         heap[0] = heap[heapSize];
+        int index = 0;
 
-        while (i < heapSize) {
-            int minChild;
-            if (heap[(i * 2) + 1] < heap[(i * 2) + 2]) {
-                minChild = (i * 2) + 1;
+        while (true) {
+            int min;
+            if (heap[(index * 2) + 1] < heap[(index * 2) + 2]) {
+                min = (index * 2) + 1;
             } else {
-                minChild = (i * 2) + 2;
+                min = (index * 2) + 2;
             }
 
-            if (minChild >= heapSize || heap[minChild] >= heap[i]) {
+            if (min >= heapSize || heap[min] >= heap[index]) {
                 break;
             }
 
-            int temp = heap[i];
-            heap[i] = heap[minChild];
-            heap[minChild] = temp;
+            int temp = heap[min];
+            heap[min] = heap[index];
+            heap[index] = temp;
 
-            i = minChild;
+            index = min;
         }
+
         return result;
     }
 
@@ -70,15 +71,13 @@ public class PriorityQueue {
         StringTokenizer st;
 
         final int T = Integer.parseInt(br.readLine());
-
         for (int testCase = 0; testCase < T; testCase++) {
             final int N = Integer.parseInt(br.readLine());
-
             st = new StringTokenizer(br.readLine());
+
             heapInit();
             for (int i = 0; i < N; i++) {
-                final int input = Integer.parseInt(st.nextToken());
-                heapPush(input);
+                heapPush(Integer.parseInt(st.nextToken()));
             }
 
             for (int i = 0; i < N; i++) {
@@ -87,7 +86,6 @@ public class PriorityQueue {
             bw.write("\n");
             bw.flush();
         }
-
 
         bw.close();
         br.close();
